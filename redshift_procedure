@@ -1,0 +1,25 @@
+CREATE OR REPLACE PROCEDURE refresh_gold_tables()
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  TRUNCATE analytics.dim_user_profile;
+  COPY analytics.dim_user_profile
+  FROM 's3://beatit-ai-data/data-engineering/gold/dim_user_profile/'
+  IAM_ROLE '<REDSHIFT_ROLE>'
+  FORMAT AS PARQUET;
+
+  TRUNCATE analytics.fact_subscription;
+  COPY analytics.fact_subscription
+  FROM 's3://beatit-ai-data/data-engineering/gold/fact_subscription/'
+  IAM_ROLE '<REDSHIFT_ROLE>'
+  FORMAT AS PARQUET;
+
+  TRUNCATE analytics.fact_engagement;
+  COPY analytics.fact_engagement
+  FROM 's3://beatit-ai-data/data-engineering/gold/fact_engagement/'
+  IAM_ROLE '<REDSHIFT_ROLE>'
+  FORMAT AS PARQUET;
+
+  ANALYZE;
+END;
+$$;
