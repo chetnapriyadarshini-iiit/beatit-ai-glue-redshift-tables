@@ -1,0 +1,28 @@
+aws glue create-table \
+--database-name beatit_ai_gold \
+--table-input '{
+ "Name": "daily_aggregates",
+ "TableType": "EXTERNAL_TABLE",
+ "PartitionKeys": [
+     {"Name":"date","Type":"date"}
+ ],
+ "StorageDescriptor": {
+   "Columns": [
+     {"Name":"dau","Type":"int"},
+     {"Name":"mau_30","Type":"int"},
+     {"Name":"new_signups","Type":"int"},
+     {"Name":"churned_users","Type":"int"},
+     {"Name":"daily_revenue","Type":"double"},
+     {"Name":"avg_revenue_per_user","Type":"double"},
+     {"Name":"avg_session_length","Type":"double"},
+     {"Name":"snapshot_ingest_ts","Type":"timestamp"}
+   ],
+   "Location": "s3://beatit-ai-data/data-engineering/gold/daily_aggregates/",
+   "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+   "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+   "SerdeInfo": {
+     "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe"
+   }
+ }
+}'
+daily_aggregates
