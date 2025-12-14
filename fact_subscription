@@ -1,0 +1,44 @@
+aws glue create-table \
+--database-name beatit_ai_gold \
+--table-input '{
+ "Name": "fact_subscription",
+ "TableType": "EXTERNAL_TABLE",
+ "PartitionKeys": [
+     {"Name":"year","Type":"int"},
+     {"Name":"month","Type":"int"}
+ ],
+ "StorageDescriptor": {
+   "Columns": [
+     {"Name":"msno","Type":"string"},
+     {"Name":"snapshot_date","Type":"date"},
+     {"Name":"first_transaction_date","Type":"date"},
+     {"Name":"last_transaction_date","Type":"date"},
+     {"Name":"total_transactions","Type":"bigint"},
+     {"Name":"total_payment_channels","Type":"int"},
+     {"Name":"change_in_payment_methods","Type":"int"},
+     {"Name":"payment_plan_days_mean","Type":"double"},
+     {"Name":"change_in_plan","Type":"int"},
+     {"Name":"plan_list_price_mean","Type":"double"},
+     {"Name":"actual_amount_paid_mean","Type":"double"},
+     {"Name":"is_auto_renew_mean","Type":"double"},
+     {"Name":"is_autorenew_change_flag","Type":"smallint"},
+     {"Name":"is_cancel_mean","Type":"double"},
+     {"Name":"is_cancel_change_flag","Type":"smallint"},
+     {"Name":"discount_mean","Type":"double"},
+     {"Name":"is_discount_mean","Type":"double"},
+     {"Name":"is_discount_max","Type":"smallint"},
+     {"Name":"amt_per_day_mean","Type":"double"},
+     {"Name":"membership_duration_mean","Type":"double"},
+     {"Name":"more_than_30_sum","Type":"bigint"},
+     {"Name":"membership_expire_date_max","Type":"date"},
+     {"Name":"membership_expire_date_max_days_since_ref","Type":"int"},
+     {"Name":"snapshot_ingest_ts","Type":"timestamp"}
+   ],
+   "Location": "s3://beatit-ai-data/data-engineering/gold/fact_subscription/",
+   "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+   "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+   "SerdeInfo": {
+     "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe"
+   }
+ }
+}'
