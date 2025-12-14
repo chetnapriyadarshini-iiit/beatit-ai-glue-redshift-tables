@@ -1,0 +1,30 @@
+aws glue create-table \
+--database-name beatit_ai_gold \
+--table-input '{
+ "Name": "anomaly_flags",
+ "TableType": "EXTERNAL_TABLE",
+ "PartitionKeys": [
+     {"Name":"year","Type":"int"},
+     {"Name":"month","Type":"int"},
+     {"Name":"day","Type":"int"}
+ ],
+ "StorageDescriptor": {
+   "Columns": [
+     {"Name":"alert_id","Type":"string"},
+     {"Name":"metric","Type":"string"},
+     {"Name":"value","Type":"double"},
+     {"Name":"baseline","Type":"double"},
+     {"Name":"z_score","Type":"double"},
+     {"Name":"severity","Type":"string"},
+     {"Name":"resolved_flag","Type":"boolean"},
+     {"Name":"notes","Type":"string"},
+     {"Name":"ts","Type":"timestamp"}
+   ],
+   "Location": "s3://beatit-ai-data/data-engineering/gold/anomaly_flags/",
+   "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+   "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+   "SerdeInfo": {
+     "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe"
+   }
+ }
+}'
