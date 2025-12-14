@@ -1,0 +1,24 @@
+aws glue create-table \
+--database-name beatit_ai_gold \
+--table-input '{
+ "Name": "cohort_retention",
+ "TableType": "EXTERNAL_TABLE",
+ "PartitionKeys": [
+     {"Name":"cohort_month","Type":"string"}
+ ],
+ "StorageDescriptor": {
+   "Columns": [
+     {"Name":"days_from_signup","Type":"int"},
+     {"Name":"cohort_size","Type":"int"},
+     {"Name":"active_users","Type":"int"},
+     {"Name":"retention_rate","Type":"double"},
+     {"Name":"snapshot_ingest_ts","Type":"timestamp"}
+   ],
+   "Location": "s3://beatit-ai-data/data-engineering/gold/cohort_retention/",
+   "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+   "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+   "SerdeInfo": {
+     "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe"
+   }
+ }
+}'
