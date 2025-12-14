@@ -1,0 +1,65 @@
+aws glue create-table \
+--database-name beatit_ai_gold \
+--table-input '{
+ "Name": "gold_ml_features",
+ "TableType": "EXTERNAL_TABLE",
+ "PartitionKeys": [
+     {"Name":"snapshot_date","Type":"date"}
+ ],
+ "StorageDescriptor": {
+   "Columns": [
+     {"Name":"msno","Type":"string"},
+     {"Name":"city","Type":"string"},
+     {"Name":"bd","Type":"int"},
+     {"Name":"gender","Type":"smallint"},
+     {"Name":"registered_via","Type":"string"},
+     {"Name":"registration_init_time_year","Type":"int"},
+     {"Name":"registration_init_time_month","Type":"int"},
+     {"Name":"registration_init_time_day","Type":"int"},
+     {"Name":"registration_init_time_dayOfWeek","Type":"int"},
+     {"Name":"is_churn","Type":"smallint"},
+     {"Name":"total_payment_channels","Type":"int"},
+     {"Name":"change_in_payment_methods","Type":"int"},
+     {"Name":"payment_plan_days_mean","Type":"double"},
+     {"Name":"change_in_plan","Type":"int"},
+     {"Name":"plan_list_price_mean","Type":"double"},
+     {"Name":"actual_amount_paid_mean","Type":"double"},
+     {"Name":"is_auto_renew_mean","Type":"double"},
+     {"Name":"is_autorenew_change_flag","Type":"smallint"},
+     {"Name":"total_transactions","Type":"bigint"},
+     {"Name":"is_cancel_mean","Type":"double"},
+     {"Name":"is_cancel_change_flag","Type":"smallint"},
+     {"Name":"discount_mean","Type":"double"},
+     {"Name":"is_discount_mean","Type":"double"},
+     {"Name":"is_discount_max","Type":"smallint"},
+     {"Name":"amt_per_day_mean","Type":"double"},
+     {"Name":"membership_duration_mean","Type":"double"},
+     {"Name":"more_than_30_sum","Type":"bigint"},
+     {"Name":"num_25","Type":"bigint"},
+     {"Name":"num_50","Type":"bigint"},
+     {"Name":"num_75","Type":"bigint"},
+     {"Name":"num_985","Type":"bigint"},
+     {"Name":"num_100","Type":"bigint"},
+     {"Name":"num_unq","Type":"bigbigint"},
+     {"Name":"total_secs","Type":"double"},
+     {"Name":"date_year","Type":"int"},
+     {"Name":"date_month","Type":"int"},
+     {"Name":"date_day","Type":"int"},
+     {"Name":"date_dayOfWeek","Type":"int"},
+     {"Name":"login_freq","Type":"bigint"},
+     {"Name":"registration_duration","Type":"int"},
+     {"Name":"membership_expire_date_max_days_since_ref","Type":"int"},
+     {"Name":"last_login_days_since_ref","Type":"int"},
+     {"Name":"transaction_date_min_days_since_ref","Type":"int"},
+     {"Name":"transaction_date_max_days_since_ref","Type":"int"},
+     {"Name":"gold_ingest_ts","Type":"timestamp"},
+     {"Name":"run_id","Type":"string"}
+   ],
+   "Location": "s3://beatit-ai-data/data-engineering/gold/gold_ml_features/",
+   "InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+   "OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+   "SerdeInfo": {
+     "SerializationLibrary": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe"
+   }
+ }
+}'
