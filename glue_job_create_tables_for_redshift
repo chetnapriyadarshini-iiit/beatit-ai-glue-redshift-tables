@@ -1,0 +1,84 @@
+import sys
+from awsglue.context import GlueContext
+from awsglue.utils import getResolvedOptions
+from pyspark.context import SparkContext
+from pyspark.sql import functions as F
+
+# ----------------------------
+# Setup
+# ----------------------------
+sc = SparkContext()
+glueContext = GlueContext(sc)
+spark = glueContext.spark_session
+
+spark.conf.set("spark.sql.sources.partitionOverwriteMode", "dynamic")
+
+SILVER_BASE = "s3://beatit-ai-data/data-engineering/silver"
+GOLD_BASE   = "s3://beatit-ai-data/data-engineering/gold"
+
+# ----------------------------
+# Read Silver CSVs
+# ----------------------------
+members = spark.read.option("header", True).csv(f"{SILVER_BASE}/members/")
+transactions = spark.read.option("header", True).csv(f"{SILVER_BASE}/transactions/")
+user_logs = spark.read.option("header", True).csv(f"{SILVER_BASE}/user_logs/")
+ml_features = spark.read.option("header", True).csv(f"{SILVER_BASE}/ml_features/")
+
+# ----------------------------
+# dim_user_profile
+# ----------------------------
+dim_user_profile = members.select(
+    "msno",
+    "city",
+    "bd",
+    "gender",
+    "registered_via",
+    "registration_init_time_year",
+    "registration_init_time_month",
+    "registration_init_time_day",
+    "registration_init_time_dayOfWeek"
+)
+
+dim_user_profile.write.mode("overwrite") \
+    .format("parquet") \
+    .save(f"{GOLD_BASE}/dim_user_profile/")
+
+# ----------------------------
+# fact_subscription
+# ----------------------------
+fact_subscription = transactions.select(
+    "msno",
+    "total_payment_channels",
+    "change_in_payment_methods",
+    "payment_plan_days_mean",
+    "change_in_plan",
+    "plan_list_price_mean",
+    "actual_amount_paid_mean",
+    "is_auto_renew_mean",
+    "is_autorenew_change_flag",
+    "total_transactions",
+    "is_cancel_mean",
+    "is_cancel_change_flag",
+    "discount_mean",
+    "is_discount_mean",
+    "is_discount_max",
+    "amt_per_day_mean",
+    "membership_duration_mean",
+    "more_than_30_sum"
+)
+
+fact_subscription.write.mode("overwrite") \
+    .format("parquet") \
+    .save(f"{GOLD_BASE}/fact_subscription/")
+
+# ----------------------------
+# fact_engagement
+# ----------------------------
+fact_engagement = user_logs.select(
+    "msno",
+    "num_25",
+    "num_50",
+    "num_75",
+    "num_985",
+    "num_100",
+    "
